@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33103.201
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swiftly.User.Api", "Swiftly.User.Api\Swiftly.User.Api.csproj", "{24073CF1-3CFF-4ADF-8346-7B8B6016667B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swiftly.User.Api.Test", "Swiftly.User.Api.Test\Swiftly.User.Api.Test.csproj", "{A85C1CBD-4C3C-4CE8-8D26-68E11E08B3EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swiftly.DatabaseContext", "Swiftly.DatabaseContext\Swiftly.DatabaseContext.csproj", "{7AF9BF49-5E72-4CFD-9C84-032ED097EA78}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Swiftly.DatabaseContext.Test", "Swiftly.DatabaseContext.Test\Swiftly.DatabaseContext.Test.csproj", "{32A4022F-2FBA-45D4-B82F-99283DE0BA60}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{24073CF1-3CFF-4ADF-8346-7B8B6016667B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24073CF1-3CFF-4ADF-8346-7B8B6016667B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24073CF1-3CFF-4ADF-8346-7B8B6016667B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24073CF1-3CFF-4ADF-8346-7B8B6016667B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A85C1CBD-4C3C-4CE8-8D26-68E11E08B3EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A85C1CBD-4C3C-4CE8-8D26-68E11E08B3EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A85C1CBD-4C3C-4CE8-8D26-68E11E08B3EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A85C1CBD-4C3C-4CE8-8D26-68E11E08B3EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AF9BF49-5E72-4CFD-9C84-032ED097EA78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AF9BF49-5E72-4CFD-9C84-032ED097EA78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AF9BF49-5E72-4CFD-9C84-032ED097EA78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AF9BF49-5E72-4CFD-9C84-032ED097EA78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32A4022F-2FBA-45D4-B82F-99283DE0BA60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32A4022F-2FBA-45D4-B82F-99283DE0BA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32A4022F-2FBA-45D4-B82F-99283DE0BA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32A4022F-2FBA-45D4-B82F-99283DE0BA60}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B7B5BE95-F010-456F-B24A-A32AE5D7B3C1}
+	EndGlobalSection
+EndGlobal
