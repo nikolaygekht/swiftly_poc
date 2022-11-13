@@ -1,11 +1,13 @@
-# Server-side components
+# Summary
+
+This space consists of microservices for server-side component of swiftly POC project.
 
 # Directory
 
-## Authentication
+## Swiftly.DatabaseContext
 
-The component to create, edit, delete users and to authenticate them.
+The common services for all components for configuring Entity Framework Db contexts
 
-## Session Manager
+## Swiftly.User.Api
 
-The components that tracks the active sessions
+C# API to manipulate system users.
