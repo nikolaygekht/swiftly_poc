@@ -33,6 +33,7 @@ namespace Swiftly.User.Api
         /// and then encoded into base64
         /// </summary>
         [JsonPropertyName("passwordhash")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string PasswordHash { get; set; }
 
         /// <summary>

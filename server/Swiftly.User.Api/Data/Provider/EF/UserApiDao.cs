@@ -91,48 +91,73 @@ namespace Swiftly.User.Api.Data.Provider.EF
         }
 
         /// <summary>
-        /// Saves user
+        /// Creates multiple users at a time
+        /// </summary>
+        /// <param name="users"></param>
+        public void MassCreate(IEnumerable<User> users)
+        {
+            var arr = users.ToArray();
+            var arr1 = new UserEntity[arr.Length];
+            for (int i = 0; i < arr.Length; i++)
+                arr1[i] = New(arr[i], false);
+            mContext.SaveChanges();
+            for (int i = 0; i < arr.Length; i++)
+                arr[i].Id = arr1[i].Id;
+        }
+
+        /// <summary>
+        /// Saves a user
         /// </summary>
         /// <param name="user"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        public void Save(User user)
+        public void Save(User user) => Save(user, true);
+
+        /// <summary>
+        /// Saves a user
+        /// </summary>
+        /// <param name="user"></param>
+        private void Save(User user, bool save)
         {
             if (user.Id == 0)
             {
-                New(user);
+                New(user, save);
                 return;
             }
 
             var entity = mContext.Users.Where(m => m.Id == user.Id).FirstOrDefault();
             if (entity == null)
             {
-                New(user);
+                New(user, save);
                 return;
             }
             
             mMapper.Map(user, entity);
             mContext.Update(entity);
-            mContext.SaveChanges();
+            if (save)
+                mContext.SaveChanges();
         }
 
-        private void New(User user)
+        private UserEntity New(User user, bool save)
         {
             var entity = mMapper.Map<UserEntity>(user);
             mContext.Add(entity);
-            mContext.SaveChanges();
-            user.Id = entity.Id;
+            if (save)
+            {
+                mContext.SaveChanges();
+                user.Id = entity.Id;
+            }
+            return entity;
         }
 
-        private static void SetupUserListFilters(IQueryable<UserEntity> query, string nameFilter, string email, UserRole? role, UserStatus? status, int? skip, int? take)
+        private static IQueryable<UserEntity> SetupUserListFilters(IQueryable<UserEntity> query, string nameFilter, string email, UserRole? role, UserStatus? status)
         {
             if (!string.IsNullOrEmpty(nameFilter))
             {
                 if (nameFilter.StartsWith('*') && nameFilter.EndsWith('*'))
                     query = query.Where(m => m.UserName.Contains(nameFilter.Substring(1, nameFilter.Length - 2)));
                 else if (nameFilter.StartsWith('*'))
-                    query = query.Where(m => m.UserName.StartsWith(nameFilter.Substring(1)));
+                    query = query.Where(m => m.UserName.EndsWith(nameFilter.Substring(1)));
                 else if (nameFilter.EndsWith('*'))
-                    query = query.Where(m => m.UserName.EndsWith(nameFilter.Substring(0, nameFilter.Length - 1)));
+                    query = query.Where(m => m.UserName.StartsWith(nameFilter.Substring(0, nameFilter.Length - 1)));
                 else
                     query = query.Where(m => m.UserName == nameFilter);
             }
@@ -142,8 +167,7 @@ namespace Swiftly.User.Api.Data.Provider.EF
                 query = query.Where(m => m.Role == role.Value);
             if (status.HasValue)
                 query = query.Where(m => m.Status == status.Value);
-            if (skip != null && take != null)
-                query.Skip(skip.Value).Take(take.Value);
+            return query;
         }
 
         /// <summary>
@@ -160,7 +184,9 @@ namespace Swiftly.User.Api.Data.Provider.EF
             var query = mContext.Users
                 .AsNoTracking()
                 .AsQueryable();
-            SetupUserListFilters(query, nameFilter, email, role, status, skip, take);
+            query = SetupUserListFilters(query, nameFilter, email, role, status)
+                .OrderBy(u => u.UserName)
+                .Skip(skip).Take(take);
             var entities = query.ToArray();
             return mMapper.Map<User[]>(entities);
         }
@@ -178,7 +204,7 @@ namespace Swiftly.User.Api.Data.Provider.EF
             var query = mContext.Users
                 .AsNoTracking()
                 .AsQueryable();
-            SetupUserListFilters(query, nameFilter, email, role, status, null, null);
+            query = SetupUserListFilters(query, nameFilter, email, role, status);
             return query.Count();
         }
 

@@ -10,7 +10,7 @@ namespace Swiftly.User.Api.Data
     /// <summary>
     /// The interface to the user DAO
     /// </summary>
-    internal interface IUserDao
+    public interface IUserDao
     {
         /// <summary>
         /// Gets user by id
@@ -33,7 +33,13 @@ namespace Swiftly.User.Api.Data
         /// <param name="identifier"></param>
         /// <returns></returns>
         bool IsAnotherUserWithSameNameExists(string userName, int identifier);
-        
+
+        /// <summary>
+        /// Creates multiple users at a time
+        /// </summary>
+        /// <param name="users"></param>
+        void MassCreate(IEnumerable<User> users);
+
         /// <summary>
         /// Updates user information
         /// </summary>

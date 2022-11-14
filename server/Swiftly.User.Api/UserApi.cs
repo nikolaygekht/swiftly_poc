@@ -1,5 +1,7 @@
 ﻿using Swiftly.User.Api.Data;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Swiftly.User.Api
 {
@@ -9,7 +11,7 @@ namespace Swiftly.User.Api
     internal class UserApi : IUserApi
     {
         private readonly IUserDao mDao;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -70,16 +72,21 @@ namespace Swiftly.User.Api
             try
             {
                 var user = mDao.Find(userName);
+                
                 if (user == null)
                     return null;
-                var hash = mDao.GetPasswordHash(user.Id);
                 
+                if (user.Status != UserStatus.Active)
+                    return null;
+
+                var hash = mDao.GetPasswordHash(user.Id);
+
                 if (hash == null)
                     return null;
-                
+
                 if (string.Compare(hash, passwordHash, StringComparison.OrdinalIgnoreCase) != 0)
                     return null;
-                
+
                 return user;
             }
             catch (Exception e)
@@ -89,19 +96,35 @@ namespace Swiftly.User.Api
         }
 
         /// <summary>
+        /// Creates multiple users at a time
+        /// </summary>
+        /// <param name="users"></param>
+        public void MassCreate(IEnumerable<User> users)
+        {
+            var arr = users.ToArray();
+            for (int i = 0; i < arr.Length; i++)
+                ValidateUserBeforeSave(arr[i]);
+            mDao.MassCreate(arr);
+        }
+
+        /// <summary>
         /// Updates user information
         /// </summary>
         /// <param name="user"></param>
         public void Save(User user)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            if (string.IsNullOrEmpty(user.UserName))
-                throw new ArgumentException("The name must be set", nameof(user));
-
-            if (mDao.IsAnotherUserWithSameNameExists(user.UserName, user.Id))
-                throw new ArgumentException("The name must be unique", nameof(user));
+            try
+            {
+                ValidateUserBeforeSave(user);
+            }
+            catch (ArgumentException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new UserApiException("Save", e);
+            }
 
             try
             {
@@ -114,6 +137,18 @@ namespace Swiftly.User.Api
 
         }
 
+        private void ValidateUserBeforeSave(User user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            if (string.IsNullOrEmpty(user.UserName))
+                throw new ArgumentException("The name must be set", nameof(user));
+
+            if (mDao.IsAnotherUserWithSameNameExists(user.UserName, user.Id))
+                throw new ArgumentException("The name must be unique", nameof(user));
+        }
+
         /// <summary>
         /// Deletes user
         /// </summary>
@@ -122,6 +157,8 @@ namespace Swiftly.User.Api
         {
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
+            if (user.Id == 0)
+                throw new ArgumentException("User identifier is not set", nameof(user));
 
             try
             {
@@ -129,7 +166,7 @@ namespace Swiftly.User.Api
             }
             catch (Exception e)
             {
-                throw new UserApiException("Save", e);
+                throw new UserApiException("Delete", e);
             }
 
         }
@@ -174,7 +211,7 @@ namespace Swiftly.User.Api
             }
             catch (Exception e)
             {
-                throw new UserApiException("GetUsers", e);
+                throw new UserApiException("CountUsers", e);
             }
         }
     }

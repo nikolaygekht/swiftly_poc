@@ -34,6 +34,12 @@ namespace Swiftly.User.Api
         User ValidatePassword(string userName, string passwordHash);
 
         /// <summary>
+        /// Creates multiple users at a time
+        /// </summary>
+        /// <param name="users"></param>
+        void MassCreate(IEnumerable<User> users);
+
+        /// <summary>
         /// Updates user information
         /// </summary>
         /// <param name="user"></param>
